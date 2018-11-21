@@ -6,8 +6,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.RecursiveTask;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,44 @@ public class ThreadDemo {
 		useFutureTaskGetThreadExecuteResult();
 		useTimerExecuteScheduleTask();
 		useExecutorFramework();
+		useForkJoinFramework();
+	}
+
+	public static void useForkJoinFramework() {
+		long start = System.currentTimeMillis();
+		ForkJoinPool pool = new ForkJoinPool(); 
+		Long result = pool.invoke(createNewTask(0L, 10000000000L, 1000000000L));
+		log.info("ForkJoinPool execute result: {} {}", result , (System.currentTimeMillis() - start));
+		
+		start = System.currentTimeMillis();
+		long sum = 0; 
+		for(long i = 0;i <= 10000000000L; i++) {
+			sum += i; 
+		}
+		log.info("Simple sum: {} {}", sum, (System.currentTimeMillis() - start));
+	}
+	
+	@SuppressWarnings("serial")
+	public static RecursiveTask<Long> createNewTask(final Long start, final Long end, final Long critical){
+		return new RecursiveTask<Long>() {
+			@Override
+			protected Long compute() {
+				if(end - start <= critical) {
+					long sum = 0L; 
+					for(long l = start; l <= end; l++) {
+						sum += l; 
+					}
+					return sum; 
+				}else {
+					Long middle = (end + start) / 2; 
+					RecursiveTask<Long> left = createNewTask(start, middle, critical);
+					RecursiveTask<Long> right = createNewTask(middle+1, end, critical);
+					left.fork();
+					right.fork();
+					return left.join()+right.join(); 
+				}
+			}
+		};
 	}
 
 	private static void useExecutorFramework() throws InterruptedException {
@@ -32,13 +72,13 @@ public class ThreadDemo {
 			executorService.execute(new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("ThreadPool execute task: " 
-							+ Thread.currentThread().getName()
-							+ "  " + System.currentTimeMillis());
+					log.info("ThreadPool execute task: {} {}", 
+							Thread.currentThread().getName(), 
+							System.currentTimeMillis());
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						log.error(e.getMessage(), e);
 					}
 				}
 			});
@@ -46,9 +86,9 @@ public class ThreadDemo {
 		//也可以通过submit实现Callable接口的任务，以便获取线程执行结果
 		Future<Integer> fiboResult = executorService.submit(new Fibonacci(10)); 
 		try {
-			System.out.println("ThreadPool submit task: "+fiboResult.get());
+			log.info("ThreadPool submit task: {}",fiboResult.get());
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -60,7 +100,7 @@ public class ThreadDemo {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("TimerTask execute: " + System.currentTimeMillis());
+				log.info("TimerTask execute: {}", System.currentTimeMillis());
 			}
 		}, 5000, 3000);
 	}
@@ -74,9 +114,9 @@ public class ThreadDemo {
 		thread4.start();
 		try {
 			Integer result = task.get();
-			System.out.println("FutureTask result: " + result);
+			log.info("FutureTask result: {}" , result);
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -114,11 +154,11 @@ public class ThreadDemo {
 			@Override
 			public void run() {
 				while (true) {
-					log.info("Runnable implements 1: " + System.currentTimeMillis());
+					log.info("Runnable implements 1: {}", System.currentTimeMillis());
 					try {
 						Thread.sleep(200);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						log.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -129,11 +169,11 @@ public class ThreadDemo {
 		 */
 		Thread thread3 = new Thread(() -> {
 			while (true) {
-				log.info("Runnable implements 2: " + System.currentTimeMillis());
+				log.info("Runnable implements 2: {}",System.currentTimeMillis());
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 		});
