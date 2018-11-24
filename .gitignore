@@ -1,3 +1,8 @@
 /.metadata/
 /java-basic-thread-demo/target
 /java-basic-thread-demo/.mvn/wrapper
+
+/hello-world-demo/hello-world-jetty/.settings
+/hello-world-demo/hello-world-jetty/*.project
+/hello-world-demo/hello-world-jetty/target
+/hello-world-demo/hello-world-jetty/*.classpath
