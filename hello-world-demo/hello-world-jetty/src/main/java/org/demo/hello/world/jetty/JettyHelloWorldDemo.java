@@ -35,15 +35,17 @@ public class JettyHelloWorldDemo {
 	}
 
 	public static void main(String[] args) {
+		//创建服务器
 		Server server = new Server(8080);
 		try {
+			//设置handler
 			server.setHandler(new Handler());
+			//启动服务器
 			server.start();
+			//阻塞Jetty server的线程池，直到线程池停止
 			server.join();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-
 	}
-
 }
