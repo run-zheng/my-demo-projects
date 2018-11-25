@@ -22,9 +22,13 @@ public class JettyHelloWorldDemo {
 				HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			log.info("Handler request start: {}", request.getRequestURL());
+			//设置类型，指定编码utf8
 			response.setContentType("text/html; charset=utf-8");
+			//设置响应状态吗
 			response.setStatus(HttpServletResponse.SC_OK);
+			//写响应数据
 			response.getWriter().write("<h1>Hello world!</h1>");
+			//标记请求已处理，handle链
 			baseRequest.setHandled(true);
 			log.info("Handler request end");
 		}
