@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JettyWebAppDemo {
 	public static void main(String[] args) {
 		Server server = new Server(8080); 
-		
+		//用WebAppContext可以支持servlet
 		WebAppContext webApp = new WebAppContext(); 
 		webApp.setResourceBase("./src/main/webapp");
 		server.setHandler(webApp);
