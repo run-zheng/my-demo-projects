@@ -22,3 +22,4 @@
 /hello-world-demo/hello-world-jetty/target
 /hello-world-demo/hello-world-jetty/logs
 /hello-world-demo/hello-world-jetty/*.classpath
+/hello-world-demo/hello-world-jetty/src/main/webapp/temp
