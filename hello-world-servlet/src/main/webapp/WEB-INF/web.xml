@@ -5,7 +5,7 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
   <servlet>
-        <servlet-name>default</servlet-name>
+        <servlet-name>hello</servlet-name>
         <servlet-class>org.demo.hello.world.servlet.HelloWorldServletDemo</servlet-class>
         <init-param>
             <param-name>debug</param-name>
@@ -20,7 +20,7 @@
 
  	<!-- The mapping for the default servlet -->
     <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/hello/*</url-pattern>
+        <servlet-name>hello</servlet-name>
+        <url-pattern>/hello</url-pattern>
     </servlet-mapping>
 </web-app>
