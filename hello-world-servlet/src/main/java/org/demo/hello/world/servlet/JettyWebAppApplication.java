@@ -1,5 +1,7 @@
 package org.demo.hello.world.servlet;
 
+import java.io.File;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -25,7 +27,10 @@ public class JettyWebAppApplication {
 		webApp.setAttribute(
                 "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
                 ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/[^/]*taglibs.*\\.jar$" );
-		
+		//Jsp临时文件目录
+		File temp = new File("./src/main/webapp/temp");
+		webApp.setTempDirectory(temp);
+				
 		server.setHandler(webApp);
 		try {
 			server.start();
