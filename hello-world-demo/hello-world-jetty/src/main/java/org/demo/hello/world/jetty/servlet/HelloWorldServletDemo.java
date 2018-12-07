@@ -13,9 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class HelloWorldServletDemo extends GenericServlet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1522387682150936960L;
 
 	@Override
